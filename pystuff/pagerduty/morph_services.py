@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 class CreateRenamedSvcs(): 
     def __init__(self, access_token):
+        # sys.pycache_prefix = "/tmp"
         self.pd_rest = PagerDutyREST(access_token)
 
     def util_repl_none_null_in_dict(self, a_dict, del_keys):
@@ -81,7 +82,7 @@ class CreateRenamedSvcs():
         )
 
     def get_team_services(self, team_id, svcs_like):
-        """" return set of service(s) like svcs_like for a team """"
+        """ return set of service(s) like svcs_like for a team """
 
         r = self.pd_rest.get('/services', 
             {
@@ -140,7 +141,7 @@ class CreateRenamedSvcs():
                 )
 
     def resolve_open_incident(self, incident_id, from_email):
-        """Resolves an incident"""
+        """ Resolves an incident """
 
         payload = {
             'incident': {
@@ -221,19 +222,25 @@ class CreateRenamedSvcs():
         new_service_id = r['service']['id']
         for new_int in new_service_integrations:
            i = self.pd_rest.post('/services/{id}/integrations'.format(id=new_service_id),new_int)
-        quit()
+
     
 
 
 def main():
+
+
     token = env.settings.pd_write
     copy_svc = CreateRenamedSvcs(token)
 
+
+
     team_id = copy_svc.get_team_id('a specific pd team')
+    # team_id = copy_svc.get_team_id('MSS Portfolio Managers')
 
     services = copy_svc.get_team_services(team_id, 'service name containing this string')
+    # services = copy_svc.get_team_services(team_id, 'Bluecode')
 
-    # Use this for cleanup only!!
+    # Use this for cleanup only while testing when services created as redcode !!
     # services = copy_svc.get_team_services(team_id, 'Redcode')
     # copy_svc.delete_services(services)
 
@@ -250,4 +257,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
