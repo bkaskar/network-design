@@ -1,3 +1,5 @@
+.$*bkp
+.DS_Store
 Pipfile
 *.token
 __pycache__
